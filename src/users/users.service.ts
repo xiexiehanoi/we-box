@@ -1,9 +1,16 @@
-import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { User } from 'src/entities/user.entity';
 import { JwtService } from '@nestjs/jwt';
+import { Repository } from 'typeorm';
+import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class usersService {
-  constructor(private readonly jwtService: JwtService) {}
+  constructor(
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
+    private readonly jwtService: JwtService,
+  ) {}
 
   googleLogin(req) {
     if (!req.user) {
@@ -23,5 +30,15 @@ export class usersService {
       user: req.user,
       jwt,
     };
+  }
+
+  async register(email: string, firstName: string, lastName: string) {
+    const user = await this.userRepository.save({
+      email: email,
+      firstName: firstName,
+      lastName: lastName,
+    });
+
+    return user;
   }
 }
