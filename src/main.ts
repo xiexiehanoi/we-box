@@ -1,10 +1,10 @@
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
+import { usersModule } from './users/users.module';
 import * as session from 'express-session';
 import * as passport from 'passport';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(usersModule);
   await app.listen(3002);
   app.use(
     session({
